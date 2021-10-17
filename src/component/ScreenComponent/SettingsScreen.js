@@ -6,6 +6,8 @@ import {connect} from "react-redux";
 import AlertDialog from "../FunctionalComponent/AlertDialog";
 import {uiActions} from "../../store/UiStore";
 import {cActions} from "../../store/CurrentInfoStore";
+import {useEffect, useState} from "react";
+import ShowTextArrayUtil from "../../utils/ShowTextArrayUtil";
 
 const mapStateToProps = state => {
     return {
@@ -16,6 +18,29 @@ const mapStateToProps = state => {
 }
 
 function SettingsScreen(props) {
+    const textPreview = "现在预览的是文本框字体大小和播放速度的情况，您可以根据您的观感调整上面的选项。"
+    const playSpeedMap = {slow: 75, medium: 50, fast: 30}
+    const fontSizeMap = {small: '16px', medium: '24px', large: '32px'}
+
+    const [textPreviewInterval, setTextPreviewInterval] = useState()
+
+    function showTextPreview() {
+        ShowTextArrayUtil.showIn(
+            textPreview,
+            document.getElementById("textPreview"),
+            playSpeedMap[props.playSpeed]
+        )
+    }
+
+    useEffect(() => {
+        clearInterval(textPreviewInterval)
+
+        if (props.display) {
+            let time = textPreview.length * playSpeedMap[props.playSpeed]
+            showTextPreview()
+            setTextPreviewInterval(setInterval(showTextPreview, time + 2000))
+        }
+    }, [props.playSpeed, props.display])
 
     function closeSettings() {
         act(uiActions.SET_SETTINGS_SCREEN, false)
@@ -76,7 +101,7 @@ function SettingsScreen(props) {
                         <div className='settingItemTitle'>效果预览</div>
                     </div>
                 </div>
-                <div id="textPreview"/>
+                <div id="textPreview" style={{fontSize: fontSizeMap[props.fontSize]}}/>
             </div>
         </div>
     );
