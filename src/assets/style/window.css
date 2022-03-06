@@ -25,6 +25,8 @@
     padding: 5% 0 0 25%;
     width: 50%;
     text-align: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .introSingleRow{
