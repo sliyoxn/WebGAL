@@ -1,13 +1,14 @@
 import { PixiRef } from "@/Components/Stage/main/pixiContainer"
-import { autoList, chooseList, getScene, manualList, setCompatibility, startGame, varList } from "@/scripts"
+import { autoList, chooseList, getScene, manualList, setCompatibility, varList } from "@/scripts"
 import { pixiList } from "@/scripts/scriptsMap"
 import { controlStore, gameInfoStore, settingStore } from "@/store"
 import type { ChooseMode, PixiPerform, Runtime, SaveState } from "@/types"
 import { deepClone, exit, getSaveState, getUrl, humpToLine, loadGame } from "@/utils"
-import { compact, last } from "lodash"
-import { useEffect, useRef, useState } from "react"
+import { compact } from "lodash"
+import { useRef, useState } from "react"
 import { useStore } from "reto"
 import { useAction } from "."
+import { useMediaControl } from "./mediaControl"
 
 export type State = {
     showingText: boolean,// 是否正在渐显文字
@@ -78,31 +79,22 @@ export const useSceneScripts = (runtime: Runtime) => {
     const isPlayDone = useRef<boolean>(true)
     const pixiRef = useRef<PixiRef | null>(null)
     const { setting, setSetting } = useStore(settingStore)
+    const { bgmControl, videoControl, vocalControl } = useMediaControl()
     // const { setting, setSetting } = setting
     const [scene, setScene] = useState(state)
     const { gameInfo } = useStore(gameInfoStore)
     const settingRef = useRef<typeof setting>(setting)
+
     useAction(() => {
         settingRef.current = setting
     }, [setting])
+
     useAction(() => {
         const saves = loadGame(gameInfo)
         runtime.SavedBacklog = saves.SavedBacklog ?? []
         setScene(scene => ({ ...scene, Saves: saves.SavedGame ?? [] }))
     }, [gameInfo.Game_key])
 
-
-    const StartGame = async () => {
-        runtime.SentenceID = 0
-        setScene(scene => ({ ...scene, bgm: '' }))
-        const { url, currentScene } = await startGame()
-        // console.log(currentScene)
-        runtime.sceneScripts = currentScene
-        // 下一条脚本
-        // nextSentenceProcessor()
-        runtime.SceneName = url
-        next()
-    }
     const next = async () => {
         // debugger
         let currentScript = runtime.sceneScripts[runtime.SentenceID]
@@ -417,7 +409,6 @@ export const useSceneScripts = (runtime: Runtime) => {
         showChoose,
         ifJump,
         jumpFromBacklog,
-        StartGame,
         startShowingText,
         startAutoPlay,
         stopAutoPlay,
@@ -430,6 +421,9 @@ export const useSceneScripts = (runtime: Runtime) => {
         setSetting,
         control,
         setControl,
-        gameInfo
+        gameInfo,
+        bgmControl,
+        videoControl,
+        vocalControl
     }
 }

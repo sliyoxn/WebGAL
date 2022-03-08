@@ -27,8 +27,20 @@ export type Runtime = {
     GameVar: Record<string, number>
     SavedBacklog: SaveState[][]
     pixiApp: Application | null
+    goBackBgm: string
 }
 export type ChooseMode = 'label' | 'scene'
+
+export type MediaState = {
+    muted: boolean // 是否关闭声音
+    volume: number // 音量
+}
+
+export type MediaControl = {
+    replay: () => void
+    pause: () => void
+    setMeidaState?: (mediaState: Partial<MediaState>) => void
+}
 
 export type Script = { content: string, command: string }
 

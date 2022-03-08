@@ -10,7 +10,7 @@ import { AutoPlayWaitTime, PlaySpeed } from '@/types';
 import { useAction } from '@/hooks';
 
 const ControlBar: FunctionComponent<{}> = () => {
-    const { control, setControl, setSetting, setScene, gameInfo, setModal, modalCallback, startAutoPlay, stopAutoPlay } = useStore(sceneStore, ({ control }) => [...Object.values(control)])
+    const { control, setControl, setSetting, setScene, gameInfo, setModal, modalCallback, startAutoPlay, stopAutoPlay, vocalControl, bgmControl } = useStore(sceneStore, ({ control }) => [...Object.values(control)])
 
     const showBacklog = useCallback(
         (e: MouseEvent<HTMLElement>) => {
@@ -24,7 +24,8 @@ const ControlBar: FunctionComponent<{}> = () => {
         (e: MouseEvent<HTMLElement>) => {
             e.nativeEvent.stopImmediatePropagation()
             if (control.autoPlay || control.fastPlay) return
-            setControl(control => ({ ...control, playVocalSign: control.playVocalSign + 1 }))
+            // setControl(control => ({ ...control, playVocalSign: control.playVocalSign + 1 }))
+            vocalControl.current?.replay()
         },
         [control.autoPlay, control.fastPlay],
     )
@@ -89,7 +90,11 @@ const ControlBar: FunctionComponent<{}> = () => {
             control.fastPlay && setSetting(setting => ({ ...setting, playSpeed: PlaySpeed.medium, autoPlayWaitTime: AutoPlayWaitTime.normal }));
             (control.fastPlay || control.autoPlay) && setControl(control => ({ ...control, fastPlay: false, autoPlay: false }))
             modalCallback.current = () => {
-                setScene(scene => ({ ...scene, bgm: gameInfo.Title_bgm }))
+                setScene(scene => {
+                    runtime.goBackBgm = scene.bgm
+                    return { ...scene, bgm: gameInfo.Title_bgm }
+                })
+                bgmControl.current?.replay()
                 setControl(control => ({ ...control, titleVisible: true }))
             }
             setModal(modal => ({ ...modal, titleText: '要返回到标题界面吗?', visible: true }))
