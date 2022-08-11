@@ -62,6 +62,7 @@ export function useMouseRightClickHotKey() {
   const setComponentVisibility = useSetComponentVisibility();
   const isGameActive = useGameActive<typeof GUIStore>(GUIStore);
   const isInBackLog = useIsInBackLog<typeof GUIStore>(GUIStore);
+  const isInExtra = useIsInExtra<typeof GUIStore>(GUIStore);
   const validMenuPanelTag = useValidMenuPanelTag<typeof GUIStore>(GUIStore);
   const handleContextMenu = useCallback((ev: MouseEvent) => {
     if (isGameActive()) {
@@ -71,7 +72,7 @@ export function useMouseRightClickHotKey() {
       setComponentVisibility('showBacklog', false);
       setComponentVisibility('showTextBox', true);
     }
-    if (validMenuPanelTag()) {
+    if (validMenuPanelTag() && (!isInExtra)) {
       setComponentVisibility('showMenuPanel', false);
     }
     ev.preventDefault();
@@ -255,6 +256,12 @@ function useGameActive<T = any>(GUIStore: T & any): () => boolean {
 function useIsInBackLog<T = any>(GUIStore: T & any): () => boolean {
   return useCallback(() => {
     return (GUIStore.current.showBacklog);
+  }, [GUIStore]);
+}
+
+function useIsInExtra<T = any>(GUIStore: T & any): () => boolean {
+  return useCallback(() => {
+    return (GUIStore.current.showExtra);
   }, [GUIStore]);
 }
 
