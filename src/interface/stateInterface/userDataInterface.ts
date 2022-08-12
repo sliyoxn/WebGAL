@@ -57,6 +57,13 @@ export interface IAppreciationAsset {
   series: string;
 }
 
+export interface IAppreciationCgGroupAsset {
+  series: string;
+  cgs: Array<IAppreciationAsset>;
+  poster: string;
+  name: string;
+}
+
 export interface IAppreciation {
   bgm: Array<IAppreciationAsset>;
   cg: Array<IAppreciationAsset>;

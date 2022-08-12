@@ -3,17 +3,27 @@ import styles from "@/Components/UI/Extra/extra.module.scss";
 import React, {useCallback, useRef} from "react";
 import {logger} from "@/Core/util/etc/logger";
 import {PhotoProvider, PhotoView} from "react-photo-view";
+import {IAppreciationAsset} from "@/interface/stateInterface/userDataInterface";
 
 interface IProps {
-  name: string;
-  imgUrl: string;
+  // IAppreciationAsset时存在
+  name?: string;
+  imgUrl?: string;
+  // IAppreciationCgGroupAsset时存在
+  series?: string;
+  cgs?: Array<IAppreciationAsset>
+  // 通用
   transformDeg: number;
   index: number;
   onclick: Function;
+  isGroup: boolean;
+
+
 }
 
 
 export function ExtraCgElement(props: IProps) {
+  logger.info('extraCgElement', props);
   const showFull = useObject(false);
   const handleClick = useCallback(() => {
     showFull.set(!showFull.value)
@@ -29,7 +39,22 @@ export function ExtraCgElement(props: IProps) {
 
   return <>
     {showFull.value && <div onClick={handleShowFullContainer} className={styles.showFullContainer} ref={containerRef}>
-      <PhotoProvider>
+      {props.isGroup ?
+        (<PhotoProvider>
+          {props?.cgs?.map((item, index) => {
+            return <PhotoView key={index} src={item.url}>
+              {index < 1 ? (<div className={styles.showFullCgMain}>
+                <div style={{
+                  backgroundImage: `url('${props.imgUrl}')`,
+                  backgroundSize: `cover`,
+                  backgroundPosition: "center",
+                  width: '100%',
+                  height: '100%',
+                }} />
+              </div>) : undefined}
+            </PhotoView>
+          })}
+      </PhotoProvider>) :  (<PhotoProvider>
         <PhotoView key={0} src={props.imgUrl}>
           <div className={styles.showFullCgMain}>
             <div style={{
@@ -41,7 +66,8 @@ export function ExtraCgElement(props: IProps) {
             }} />
           </div>
         </PhotoView>
-      </PhotoProvider>
+      </PhotoProvider>)}
+
     </div>}
     <div onClick={handleClick} style={{
       // transform: `rotate(${deg}deg)`,

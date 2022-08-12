@@ -2275,6 +2275,11 @@ react-is@^18.0.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.1.0.tgz#61aaed3096d30eacf2a2127118b5b41387d32a67"
   integrity sha512-Fl7FuabXsJnV5Q1qIOQwx/sagGF18kogb4gpfcG4gjLBWO0WDiiz1ko/ExayuxE7InyQkBLkxRFG5oxY6Uu3Kg==
 
+react-photo-view@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmmirror.com/react-photo-view/-/react-photo-view-1.2.2.tgz#deaed9af83ec5ccc1f240c58a62bffeb0a6c0187"
+  integrity sha512-/xsOiDuiR23hKxpmF73EDKPvsBvcWogolXvnBhMZV4CUhd9tnXF91amjKnuQe9BmLaR9CbNxXDOI9SNKeXT5ew==
+
 react-redux@^8.0.1:
   version "8.0.1"
   resolved "https://registry.npmjs.org/react-redux/-/react-redux-8.0.1.tgz#2bc029f5ada9b443107914c373a2750f6bc0f40c"
