@@ -20,17 +20,18 @@ export interface IGuiState {
   titleBgm: string; // 标题背景音乐
   titleBg: string; // 标题背景图片
   showExtra: boolean;
+  showGlobalDialog: boolean;
 }
 
-export type componentsVisibility = Pick<IGuiState, Exclude<keyof IGuiState, 'currentMenuTag' | 'titleBg' | 'titleBgm'>>
+export type componentsVisibility = Pick<IGuiState, Exclude<keyof IGuiState, 'currentMenuTag' | 'titleBg' | 'titleBgm'>>;
 // 标题资源
-export type GuiAsset = Pick<IGuiState, 'titleBgm' | 'titleBg'>
+export type GuiAsset = Pick<IGuiState, 'titleBgm' | 'titleBg'>;
 
 export interface IGuiStore {
-  GuiState: IGuiState,
-  setGuiAsset: <K extends keyof GuiAsset>(key: K, value: string) => void,
-  setVisibility: <K extends keyof componentsVisibility>(key: K, value: boolean) => void,
-  setMenuPanelTag: (value: MenuPanelTag) => void
+  GuiState: IGuiState;
+  setGuiAsset: <K extends keyof GuiAsset>(key: K, value: string) => void;
+  setVisibility: <K extends keyof componentsVisibility>(key: K, value: boolean) => void;
+  setMenuPanelTag: (value: MenuPanelTag) => void;
 }
 
 export interface setVisibilityPayload {

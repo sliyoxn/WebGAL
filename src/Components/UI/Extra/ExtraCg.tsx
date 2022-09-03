@@ -4,39 +4,35 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/store/store";
 import {useObject} from "@/hooks/useObject";
 import './extraCG_animation_List.scss';
-import {ExtraCgElement} from "@/Components/UI/Extra/ExtraCgElement";
+// import { ExtraCgElement } from '@/Components/UI/Extra/ExtraCgElement';
+import { ExtraCgElement } from '@/Components/UI/Extra/ExtraCgElement';
 import {logger} from "@/Core/util/etc/logger";
 import {IAppreciationAsset, IAppreciationCgGroupAsset} from "@/interface/stateInterface/userDataInterface";
 
 export function ExtraCg() {
-  const cgPerPage = 9;
-  const es = useSelector((state: RootState) => state.userData.appreciationData);
-  logger.info('qaq:', es);
-  logger.info('qvq:', processCgData(es.cg));
-  const renderCg = processCgData(es.cg);
-  const pageNumber = Math.ceil(renderCg.length / cgPerPage);
+  const cgPerPage = 8;
+  const extraState = useSelector((state: RootState) => state.userData.appreciationData);
+  const pageNumber = Math.ceil(extraState.cg.length / cgPerPage);
   const currentPage = useObject(1);
-  // const renderExtra
+
   // 开始生成立绘鉴赏的图片
   const showCgList = [];
-  const len = renderCg.length;
-  const handleClick = useCallback((qvq) => {
-    logger.info('ExtraCg', qvq);
-  }, []);
-  for (let i = (currentPage.value - 1) * cgPerPage; i < Math.min(len, (currentPage.value - 1) * cgPerPage + cgPerPage); i++) {
+  const len = extraState.cg.length;
+  for (
+    let i = (currentPage.value - 1) * cgPerPage;
+    i < Math.min(len, (currentPage.value - 1) * cgPerPage + cgPerPage);
+    i++
+  ) {
     const index = i - (currentPage.value - 1) * cgPerPage;
     const deg = Random(-5, 5);
     const temp = (
-      <ExtraCgElement transformDeg={deg}
-                      index={index}
-                      onclick={handleClick}
-                      key={index.toString() + (renderCg[i].url || renderCg[i].poster)}
-                      name={renderCg[i].name}
-                      imgUrl={renderCg[i].url || renderCg[i].poster}
-                      isGroup={!!renderCg[i].poster}
-                      cgs={renderCg[i].cgs}
-                      // series={}
-                      />
+      <ExtraCgElement
+        name={extraState.cg[i].name}
+        imgUrl={extraState.cg[i].url}
+        transformDeg={deg}
+        index={index}
+        key={index.toString() + extraState.cg[i].url}
+      />
     );
     showCgList.push(temp);
   }
@@ -48,20 +44,22 @@ export function ExtraCg() {
     if (currentPage.value === i) {
       className = className + ' ' + styles.cgNav_active;
     }
-    const temp = <div onClick={() => currentPage.set(i)} key={'nav' + i} className={className}>
-      {i}
-    </div>;
+    const temp = (
+      <div onClick={() => currentPage.set(i)} key={'nav' + i} className={className}>
+        {i}
+      </div>
+    );
     showNav.push(temp);
   }
 
-  return <div className={styles.cgMain}>
-    <div className={styles.cgContainer}>
-      {showCgList}
+  return (
+    <div className={styles.cgMain}>
+      <div className={styles.cgShowDiv}>
+        <div className={styles.cgShowDivWarpper}>{showNav}</div>
+      </div>
+      <div className={styles.cgContainer}>{showCgList}</div>
     </div>
-    <div className={styles.cgShowDiv}>
-      {showNav}
-    </div>
-  </div>;
+  );
 }
 
 function Random(min: number, max: number) {

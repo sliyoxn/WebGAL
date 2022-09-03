@@ -1,10 +1,11 @@
-import {FC} from 'react';
+import { FC } from 'react';
 import styles from '../SaveAndLoad.module.scss';
-import {saveGame} from '@/Core/controller/storage/saveGame';
-import {setStorage} from '@/Core/controller/storage/storageController';
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@/store/store";
-import {setSlPage} from "@/store/userDataReducer";
+import { saveGame } from '@/Core/controller/storage/saveGame';
+import { setStorage } from '@/Core/controller/storage/storageController';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { setSlPage } from '@/store/userDataReducer';
+import { showGlogalDialog } from '@/Components/UI/GlobalDialog/GlobalDialog';
 
 export const Save: FC = () => {
   const userDataState = useSelector((state: RootState) => state.userData);
@@ -38,9 +39,9 @@ export const Save: FC = () => {
   for (let i = start; i <= end; i++) {
     animationIndex++;
     const saveData = userDataState.saveData[i];
-    let saveElementContent = <div/>;
+    let saveElementContent = <div />;
     if (saveData) {
-      const speaker = saveData.nowStageState.showName === '' ? '' : `${saveData.nowStageState.showName}`;
+      const speaker = saveData.nowStageState.showName === '' ? '\u00A0' : `${saveData.nowStageState.showName}`;
       saveElementContent = (
         <>
           <div className={styles.Save_Load_content_element_top}>
@@ -56,26 +57,18 @@ export const Save: FC = () => {
               />
             )}
             {saveData.nowStageState.bgName === '' && (
-              <div style={{background: 'rgba(0,0,0,0.6)', width: '100%', height: '100%'}}/>
+              <div style={{ background: 'rgba(0,0,0,0.6)', width: '100%', height: '100%' }} />
             )}
             {saveData.nowStageState.figNameLeft !== '' && (
               <img
-                className={
-                  styles.Save_Load_content_miniRen_figure +
-                                    ' ' +
-                                    styles.Save_Load_content_miniRen_figLeft
-                }
+                className={styles.Save_Load_content_miniRen_figure + ' ' + styles.Save_Load_content_miniRen_figLeft}
                 alt="Save_img_previewLeft"
                 src={saveData.nowStageState.figNameLeft}
               />
             )}
             {saveData.nowStageState.figNameRight !== '' && (
               <img
-                className={
-                  styles.Save_Load_content_miniRen_figure +
-                                    ' ' +
-                                    styles.Save_Load_content_miniRen_figRight
-                }
+                className={styles.Save_Load_content_miniRen_figure + ' ' + styles.Save_Load_content_miniRen_figRight}
                 alt="Save_img_preview"
                 src={saveData.nowStageState.figNameRight}
               />
@@ -111,10 +104,26 @@ export const Save: FC = () => {
     // }
     const saveElement = (
       <div
-        onClick={() => saveGame(i)}
+        onClick={() => {
+          console.log('123', userDataState.saveData[i]);
+          if (userDataState.saveData[i]) {
+            showGlogalDialog({
+              title: '是否覆盖存档？',
+              leftText: '是',
+              rightText: '否',
+              leftFunc: () => {
+                saveGame(i);
+                setStorage();
+              },
+              rightFunc: () => {},
+            });
+          } else {
+            saveGame(i);
+          }
+        }}
         key={'saveElement_' + i}
         className={styles.Save_Load_content_element}
-        style={{animationDelay: `${animationIndex * 30}ms`}}
+        style={{ animationDelay: `${animationIndex * 30}ms` }}
       >
         {saveElementContent}
       </div>
@@ -130,10 +139,7 @@ export const Save: FC = () => {
         </div>
         <div className={styles.Save_Load_top_buttonList}>{page}</div>
       </div>
-      <div
-        className={styles.Save_Load_content}
-        id={'Save_content_page_' + userDataState.optionData.slPage}
-      >
+      <div className={styles.Save_Load_content} id={'Save_content_page_' + userDataState.optionData.slPage}>
         {showSaves}
       </div>
     </div>
