@@ -1,13 +1,13 @@
-import styles from "@/Components/UI/Extra/extra.module.scss";
-import React, {useCallback} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "@/store/store";
-import {useObject} from "@/hooks/useObject";
+import styles from '@/Components/UI/Extra/extra.module.scss';
+import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { useObject } from '@/hooks/useObject';
 import './extraCG_animation_List.scss';
 // import { ExtraCgElement } from '@/Components/UI/Extra/ExtraCgElement';
 import { ExtraCgElement } from '@/Components/UI/Extra/ExtraCgElement';
-import {logger} from "@/Core/util/etc/logger";
-import {IAppreciationAsset, IAppreciationCgGroupAsset} from "@/interface/stateInterface/userDataInterface";
+import { logger } from '@/Core/util/etc/logger';
+import { IAppreciationAsset, IAppreciationCgGroupAsset } from '@/interface/stateInterface/userDataInterface';
 
 export function ExtraCg() {
   const cgPerPage = 8;
@@ -32,6 +32,8 @@ export function ExtraCg() {
         transformDeg={deg}
         index={index}
         key={index.toString() + extraState.cg[i].url}
+        isGroup={false}
+        onclick={() => {}}
       />
     );
     showCgList.push(temp);
@@ -69,6 +71,7 @@ function Random(min: number, max: number) {
 function processCgData(data: Array<IAppreciationAsset>): Array<IAppreciationAsset | IAppreciationCgGroupAsset> {
   let newCgData: Array<any> = [];
   let map: Map<string, Array<IAppreciationAsset>> = new Map();
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of
   for (let i = 0; i < data.length; i++) {
     let item = data[i];
     if (map.has(item.series)) {
@@ -76,7 +79,7 @@ function processCgData(data: Array<IAppreciationAsset>): Array<IAppreciationAsse
     } else {
       map.set(item.series, [item]);
     }
-    map.set(item.series, (map.get(item.series) || []));
+    map.set(item.series, map.get(item.series) || []);
   }
   // @todo key priority ranking
   for (const mapElement of map) {
@@ -84,14 +87,14 @@ function processCgData(data: Array<IAppreciationAsset>): Array<IAppreciationAsse
     if (key === 'default') {
       newCgData.push(...val);
     } else if (key === '') {
-       newCgData.push(...val);
-    }else {
+      newCgData.push(...val);
+    } else {
       newCgData.push({
         series: key,
         cgs: [...val],
         poster: val[0].url,
-        name: val[0].name
-      })
+        name: val[0].name,
+      });
     }
   }
   return newCgData;

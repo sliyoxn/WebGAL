@@ -1,6 +1,8 @@
 /**
  * 在窗口大小改变时进行强制缩放
  */
+import {setRotateFlag} from "@/store/storage";
+
 export const resize = () => {
   const targetHeight = 900;
   const targetWidth = 1600;
@@ -26,6 +28,7 @@ export const resize = () => {
       if (w * (9 / 16) < h) {
         root.style.transform = `translate(${mw}px, ${mh}px) scale(${zoomW},${zoomW})`;
       }
+      setRotateFlag(false);
     } else {
       mw2os = -mw2os;
       if (h * (9 / 16) >= w) {
@@ -34,6 +37,7 @@ export const resize = () => {
       if (h * (9 / 16) < w) {
         root.style.transform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomW2},${zoomW2})`;
       }
+      setRotateFlag(true);
     }
   }
 

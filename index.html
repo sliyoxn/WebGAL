@@ -166,6 +166,7 @@
                 if (w * (9 / 16) < h) {
                     root.style.transform = `translate(${mw}px, ${mh}px) scale(${zoomW},${zoomW})`;
                 }
+                localStorage.setItem('RotateFlag', 'false');
             } else {
                 mw2os = -mw2os;
                 if (h * (9 / 16) >= w) {
@@ -174,6 +175,7 @@
                 if (h * (9 / 16) < w) {
                     root.style.transform = `rotate(90deg) translate(${mw2os}px, ${mh2os}px) scale(${zoomW2},${zoomW2})`;
                 }
+                localStorage.setItem('RotateFlag', 'true');
             }
         }
     }
