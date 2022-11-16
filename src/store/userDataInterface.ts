@@ -1,4 +1,4 @@
-import { IBacklogItem, sceneEntry } from '../coreInterface/runtimeInterface';
+import { IBacklogItem, sceneEntry } from '../Core/runtime/runtimeInterface';
 import { IStageState } from './stageInterface';
 
 /**
@@ -55,6 +55,7 @@ export interface ISaveData {
   index: number; // 存档的序号
   saveTime: string; // 保存时间
   sceneData: ISaveScene; // 场景数据
+  previewImage: string;
 }
 
 export interface IAppreciationAsset {

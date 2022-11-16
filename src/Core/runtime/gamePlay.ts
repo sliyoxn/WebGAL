@@ -1,4 +1,4 @@
-import { IGamePlay } from '@/interface/coreInterface/runtimeInterface';
+import { IGamePlay } from '@/Core/runtime/runtimeInterface';
 
 /**
  * 游戏运行时变量
@@ -11,5 +11,5 @@ export const RUNTIME_GAMEPLAY: IGamePlay = {
   autoInterval: null,
   fastInterval: null,
   autoTimeout: null,
-  currentPixi: null,
+  pixiStage: null,
 };

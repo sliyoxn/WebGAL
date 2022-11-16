@@ -1,6 +1,6 @@
 import { RUNTIME_CURRENT_BACKLOG } from '../../runtime/backlog';
 import { logger } from '../../util/etc/logger';
-import { ISaveData } from '@/interface/stateInterface/userDataInterface';
+import { ISaveData } from '@/store/userDataInterface';
 import { RUNTIME_SCENE_DATA } from '../../runtime/sceneData';
 import { syncStorageFast } from './storageController';
 import { webgalStore } from '@/store/store';
@@ -30,17 +30,32 @@ export const saveGame = (index: number) => {
 export function generateCurrentStageData(index: number) {
   const stageState = webgalStore.getState().stage;
   const saveBacklog = cloneDeep(RUNTIME_CURRENT_BACKLOG);
+
+  /**
+   * 生成缩略图
+   */
+
+  const canvas: HTMLCanvasElement = document.getElementById('pixiCanvas')! as HTMLCanvasElement;
+  const canvas2 = document.createElement('canvas');
+  const context = canvas2.getContext('2d');
+  canvas2.width = 640;
+  canvas2.height = 360;
+  context!.drawImage(canvas, 0, 0, 640, 360);
+  const urlToSave = canvas2.toDataURL('image/webp', 0.8);
+  canvas2.remove();
   const saveData: ISaveData = {
     nowStageState: cloneDeep(stageState),
     backlog: saveBacklog, // 舞台数据
     index: index, // 存档的序号
     saveTime: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString('chinese', { hour12: false }), // 保存时间
+    // 场景数据
     sceneData: {
       currentSentenceId: RUNTIME_SCENE_DATA.currentSentenceId, // 当前语句ID
       sceneStack: cloneDeep(RUNTIME_SCENE_DATA.sceneStack), // 场景栈
       sceneName: RUNTIME_SCENE_DATA.currentScene.sceneName, // 场景名称
       sceneUrl: RUNTIME_SCENE_DATA.currentScene.sceneUrl, // 场景url
-    }, // 场景数据
+    },
+    previewImage: urlToSave,
   };
   return saveData;
 }

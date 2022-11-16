@@ -6,9 +6,10 @@ export const pixiRain = (rainSpeed: number, number: number) => {
   // 设置缩放的系数
   const scalePreset = 0.48;
 
-  const app = RUNTIME_GAMEPLAY.currentPixi;
+  const effectsContainer = RUNTIME_GAMEPLAY.pixiStage!.effectsContainer!;
+  const app = RUNTIME_GAMEPLAY.pixiStage!.currentApp!;
   const container = new PIXI.Container();
-  app.stage.addChild(container);
+  effectsContainer.addChild(container);
   // 创建纹理
   const texture = PIXI.Texture.from('./game/tex/raindrop.png');
   // 将容器移到中心
@@ -22,7 +23,7 @@ export const pixiRain = (rainSpeed: number, number: number) => {
   // container.rotation = -0.2;
   const bunnyList: any = [];
   // 监听动画更新
-  app.ticker.add((delta: any) => {
+  function ticker(delta: number) {
     // 获取长宽，用于控制雪花出现位置
     const stageWidth = 2560;
     const stageHeight = 1440;
@@ -66,8 +67,12 @@ export const pixiRain = (rainSpeed: number, number: number) => {
       bunnyList.unshift();
       container.removeChild(container.children[0]);
     }
-  });
-  return container;
+  }
+  RUNTIME_GAMEPLAY.pixiStage?.registerAnimation(
+    { setStartState: () => {}, setEndState: () => {}, tickerFunc: ticker },
+    'rain-Ticker',
+  );
+  return { container, tickerKey: 'rain-Ticker' };
 };
 
 export default pixiRain;

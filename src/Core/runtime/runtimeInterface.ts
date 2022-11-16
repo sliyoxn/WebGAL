@@ -2,9 +2,10 @@
  * 子场景结束后回到父场景的入口
  * @interface sceneEntry
  */
-import { IStageState } from '../stateInterface/stageInterface';
-import { ISaveScene } from '../stateInterface/userDataInterface';
-import { IPerform } from './performInterface';
+import { IStageState } from '../../store/stageInterface';
+import { ISaveScene } from '../../store/userDataInterface';
+import { IPerform } from '../controller/perform/performInterface';
+import PixiStage from '@/Core/controller/stage/pixi/PixiController';
 
 export interface sceneEntry {
   sceneName: string; // 场景名称
@@ -29,5 +30,6 @@ export interface IGamePlay {
   autoInterval: ReturnType<typeof setInterval> | null;
   fastInterval: ReturnType<typeof setInterval> | null;
   autoTimeout: ReturnType<typeof setTimeout> | null;
-  currentPixi: any;
+  // 游戏运行时的 PIXI 舞台
+  pixiStage: PixiStage | null;
 }

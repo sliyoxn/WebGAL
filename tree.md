@@ -70,7 +70,7 @@ src
 |  |     ├─perform
 |  |     |    ├─unmountPerform.ts
 |  |     |    ├─pixi
-|  |     |    |  └pixiController.ts
+|  |     |    |  └initPixi.ts
 |  |     ├─gamePlay
 |  |     |    ├─autoPlay.ts
 |  |     |    ├─fastSkip.ts
@@ -128,7 +128,7 @@ src
 |     | |    ├─Backlog.tsx
 |     | |    └backlog.module.scss
 |     ├─Stage
-|     |   ├─MainStage.tsx
+|     |   ├─Stage.tsx
 |     |   ├─mainStage.module.scss
 |     |   ├─TextBox
 |     |   |    ├─TextBox.tsx
