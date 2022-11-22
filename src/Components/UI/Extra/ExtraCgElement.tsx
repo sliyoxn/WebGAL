@@ -1,6 +1,7 @@
 import { useValue } from '@/hooks/useValue';
 import styles from '@/Components/UI/Extra/extra.module.scss';
-import React from 'react';
+import React, { useEffect, useMemo } from "react";
+import { FULL_IMAGE_INFO, RUNTIME_GAME_INFO } from "@/Core/runtime/etc";
 
 interface IProps {
   name: string;
@@ -9,12 +10,29 @@ interface IProps {
   index: number;
 }
 
-export function ExtraCgElement(props: IProps) {
+const ExtraCgElement = React.memo(function ExtraCgElement(props: IProps) {
   const showFull = useValue(false);
+  const setShowFull = function(value: boolean) {
+    FULL_IMAGE_INFO.fullImageModelUpdater = value ? setShowFull : undefined;
+    FULL_IMAGE_INFO.isInFullImageModel = value;
+    showFull.set(value);
+  };
+  // 卸载组件时 重新标记为false
+  useEffect(() => {
+    return () => {
+      FULL_IMAGE_INFO.isInFullImageModel = false;
+    }
+  }, [])
   return (
     <>
       {showFull.value && (
-        <div onClick={() => showFull.set(!showFull.value)} className={styles.showFullContainer}>
+        <div onClick={(event) => {
+          event.stopPropagation();
+          setShowFull(!showFull.value);
+        }} onContextMenu={(e) => {
+          e.preventDefault();
+          return false;
+        }} className={styles.showFullContainer}>
           <div className={styles.showFullCgMain}>
             <div
               style={{
@@ -29,7 +47,9 @@ export function ExtraCgElement(props: IProps) {
         </div>
       )}
       <div
-        onClick={() => showFull.set(!showFull.value)}
+        onClick={(event) => {
+          setShowFull(!showFull.value)
+        }}
         style={{
           // transform: `rotate(${deg}deg)`,
           animation: `cg_softIn_${props.transformDeg} 1.5s ease-out ${100 + props.index * 100}ms forwards `,
@@ -49,4 +69,7 @@ export function ExtraCgElement(props: IProps) {
       </div>
     </>
   );
-}
+});
+
+export {ExtraCgElement}
+

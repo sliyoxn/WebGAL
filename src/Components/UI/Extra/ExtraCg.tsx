@@ -1,5 +1,5 @@
 import styles from '@/Components/UI/Extra/extra.module.scss';
-import React from 'react';
+import React, { useMemo } from "react";
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { useValue } from '@/hooks/useValue';
@@ -13,26 +13,31 @@ export function ExtraCg() {
   const currentPage = useValue(1);
 
   // 开始生成立绘鉴赏的图片
-  const showCgList = [];
-  const len = extraState.cg.length;
-  for (
-    let i = (currentPage.value - 1) * cgPerPage;
-    i < Math.min(len, (currentPage.value - 1) * cgPerPage + cgPerPage);
-    i++
-  ) {
-    const index = i - (currentPage.value - 1) * cgPerPage;
-    const deg = Random(-5, 5);
-    const temp = (
-      <ExtraCgElement
-        name={extraState.cg[i].name}
-        imgUrl={extraState.cg[i].url}
-        transformDeg={deg}
-        index={index}
-        key={index.toString() + extraState.cg[i].url}
-      />
-    );
-    showCgList.push(temp);
-  }
+  const showCgList = useMemo(() => {
+    console.log('showCgList', currentPage.value, cgPerPage, pageNumber, extraState);
+    const len = extraState.cg.length;
+    let arr = [];
+    for (
+      let i = (currentPage.value - 1) * cgPerPage;
+      i < Math.min(len, (currentPage.value - 1) * cgPerPage + cgPerPage);
+      i++
+    ) {
+      const index = i - (currentPage.value - 1) * cgPerPage;
+      const deg = Random(-5, 5);
+      const temp = (
+        <ExtraCgElement
+          name={extraState.cg[i].name}
+          imgUrl={extraState.cg[i].url}
+          transformDeg={deg}
+          index={index}
+          key={index.toString() + extraState.cg[i].url}
+        />
+      );
+      arr.push(temp);
+    }
+    return arr;
+  }, [currentPage.value, cgPerPage, pageNumber, JSON.stringify(extraState)]);
+
 
   // 生成cg鉴赏的导航
   const showNav = [];

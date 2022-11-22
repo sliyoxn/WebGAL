@@ -10,7 +10,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ISaveData } from '@/store/userDataInterface';
 import { generateCurrentStageData } from '@/Core/controller/storage/saveGame';
 import { loadGameFromStageData } from '@/Core/controller/storage/loadGame';
-import { RUNTIME_GAME_INFO } from '@/Core/runtime/etc';
+import { FULL_IMAGE_INFO, RUNTIME_GAME_INFO } from "@/Core/runtime/etc";
 import { logger } from '@/Core/util/etc/logger';
 import { RUNTIME_SCENE_DATA } from '@/Core/runtime/sceneData';
 import { nextSentence } from '@/Core/controller/gamePlay/nextSentence';
@@ -73,7 +73,12 @@ export function useMouseRightClickHotKey() {
       return false;
     }
     if (isShowExtra()) {
-      setComponentVisibility('showExtra', false);
+      if (!FULL_IMAGE_INFO.isInFullImageModel) {
+        setComponentVisibility('showExtra', false);
+      } else {
+        FULL_IMAGE_INFO.fullImageModelUpdater && FULL_IMAGE_INFO.fullImageModelUpdater(false);
+        return true;
+      }
     }
     if (isGameActive()) {
       setComponentVisibility('showTextBox', !GUIStore.current.showTextBox);
